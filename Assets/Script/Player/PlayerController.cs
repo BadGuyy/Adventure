@@ -1,0 +1,123 @@
+using System;
+using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerController : MonoBehaviour
+{
+    [Header("Move Settings")]
+    [SerializeField] private float _moveSpeed = 3f;
+    private float _currentSpeed = 0f;
+    private float _targetSpeed = 0f;
+    private float _currentDampingVelocity = 0f;
+    private float _WalkSpeed = 2.8f;
+    private float _SprintSpeed = 5.6f;
+    private Vector3 _normalizedForwardDirection = Vector3.zero;
+    private Vector3 _normalizedRightDirection = Vector3.zero;
+    [SerializeField] private float _accDampTime = 0.3f;
+    private bool _isSprinting = false;
+    [SerializeField][Range(0f, 1f)] private float _turnSpeed = 0.3f;
+    private Vector2 _moveInput;
+    private Vector3 _moveDirection = Vector3.zero;
+    [SerializeField] private float _jumpHeight = 1.1f;
+    [SerializeField][Range(0f, 1f)] private float _gravityScale = 1f;
+    private bool _isJumping = false;
+    private float _verticalVelocity = 0f;
+
+    [Header("Look Camera")]
+    [SerializeField] private CinemachineCamera _playerFollowCinemachineCamera;
+    private Animator _playerAnimator;
+    private CharacterController _playerCharacterController;
+
+    void Awake()
+    {
+        _playerAnimator = GetComponent<Animator>();
+        _playerCharacterController = GetComponent<CharacterController>();
+    }
+
+    void Update()
+    {
+        JumpAndGravity();
+        Move();
+    }
+
+    private void JumpAndGravity()
+    {
+        if (_isJumping && _verticalVelocity <= 0f)
+        {
+            _isJumping = false;
+        }
+        _verticalVelocity += Physics.gravity.y * _gravityScale * Time.deltaTime;
+        _verticalVelocity = Mathf.Clamp(_verticalVelocity, -2f, 10f);
+    }
+
+    private void Move()
+    {
+        if (_moveInput.magnitude != 0f)
+        {
+            Vector2 targetSpeed = _moveInput * (Input.GetKey(KeyCode.LeftShift) ? _SprintSpeed : _WalkSpeed);
+            _targetSpeed = targetSpeed.magnitude;
+        }
+        else
+        {
+            _targetSpeed = 0f;
+            _isSprinting = false;
+        }
+        // 移动加减速阻尼
+        _currentSpeed = Mathf.SmoothDamp(_currentSpeed, _targetSpeed, ref _currentDampingVelocity, _accDampTime);
+        _playerAnimator.SetFloat("Speed", _currentSpeed);
+        // 角色带阻尼转向
+        if (_moveInput.magnitude != 0f)
+        {
+            _moveDirection = (_normalizedForwardDirection * _moveInput.y + _normalizedRightDirection * _moveInput.x).normalized;
+            Vector3 targetDirection = _moveDirection;
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _turnSpeed);
+        }
+
+        // 计算角色相机朝向的移动方向
+        Vector3 movement = _moveDirection * _currentSpeed * _moveSpeed * Time.deltaTime;
+        // 模拟重力
+        movement.y += _verticalVelocity * Time.deltaTime;
+        // 应用移动
+        _playerCharacterController.Move(movement);
+    }
+
+    void OnMove(InputValue value)
+    {
+        _moveInput = value.Get<Vector2>();
+    }
+
+    void OnLook(InputValue value)
+    {
+        Vector3 camForward = _playerFollowCinemachineCamera.transform.forward;
+        Vector3 camRight = _playerFollowCinemachineCamera.transform.right;
+        // 忽略摄像机俯仰角
+        camForward.y = 0;
+        camRight.y = 0;
+        camForward.Normalize();
+        camRight.Normalize();
+        // 合成移动方向
+        _normalizedForwardDirection = camForward;
+        _normalizedRightDirection = camRight;
+    }
+
+    /// <summary>
+    /// 有Bug的冲刺输入，先按Shift后按W，会导致角色进入行走状态，不进入冲刺状态
+    /// </summary>
+    /// <param name="value"></param>
+    void OnSprint(InputValue value)
+    {
+        _isSprinting = value.isPressed;
+    }
+
+    void OnJump(InputValue value)
+    {
+        if (value.isPressed && _playerCharacterController.isGrounded)
+        {
+            _verticalVelocity = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * _jumpHeight);
+            _isJumping = true;
+            _playerAnimator.SetTrigger("Jump");
+        }
+    }
+}
