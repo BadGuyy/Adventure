@@ -43,12 +43,20 @@ public class PlayerController : MonoBehaviour
 
     private void JumpAndGravity()
     {
-        if (_isJumping && _verticalVelocity <= 0f)
+        if (_isJumping && _playerCharacterController.isGrounded && _verticalVelocity <= 0f)
         {
             _isJumping = false;
         }
-        _verticalVelocity += Physics.gravity.y * _gravityScale * Time.deltaTime;
-        _verticalVelocity = Mathf.Clamp(_verticalVelocity, -2f, 10f);
+        if (!_playerCharacterController.isGrounded)
+        {
+            _verticalVelocity += Physics.gravity.y * _gravityScale * Time.deltaTime;
+            if(_verticalVelocity < 0f) _playerAnimator.SetBool("isFalling", true);
+        }
+        else
+        {
+            _playerAnimator.SetBool("isFalling", false);
+        }
+        _verticalVelocity = Mathf.Clamp(_verticalVelocity, -10f, 10f);
     }
 
     private void Move()
@@ -63,7 +71,7 @@ public class PlayerController : MonoBehaviour
             _targetSpeed = 0f;
             _isSprinting = false;
         }
-        // 移动加减速阻尼
+        // 移动加减速阻尼，手柄不同的输入值会导致不同的移动速度
         _currentSpeed = Mathf.SmoothDamp(_currentSpeed, _targetSpeed, ref _currentDampingVelocity, _accDampTime);
         _playerAnimator.SetFloat("Speed", _currentSpeed);
         // 角色带阻尼转向
@@ -113,6 +121,7 @@ public class PlayerController : MonoBehaviour
 
     void OnJump(InputValue value)
     {
+        if(_isJumping) return;
         if (value.isPressed && _playerCharacterController.isGrounded)
         {
             _verticalVelocity = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * _jumpHeight);
