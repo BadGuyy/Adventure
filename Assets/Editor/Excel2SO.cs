@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using OfficeOpenXml;
 using UnityEditor;
 using UnityEngine;
@@ -25,11 +26,36 @@ public class Excel2SO
                 Debug.LogWarning($"Selected file is not an Excel file: {assetPath}");
                 continue;
             }
-            ReadExcelAndCreateSO(assetPath);
+            Type SOType = typeof(TaskList_SO);
+            Type dataType = typeof(TaskData);
+            ReadExcelAndCreateSO(assetPath, SOType, dataType);
         }
     }
 
-    private static void ReadExcelAndCreateSO(string assetPath)
+    [MenuItem("Tools/Excel/Read Dialogue Table")]
+    static void ReadDialogueTable()
+    {
+        string[] selectedAssets = Selection.assetGUIDs;
+        if (selectedAssets.Length == 0)
+        {
+            Debug.LogWarning("Please select an Excel file.");
+            return;
+        }
+        for (int i = 0; i < selectedAssets.Length; i++)
+        {
+            string assetPath = AssetDatabase.GUIDToAssetPath(selectedAssets[i]);
+            if (Path.GetExtension(assetPath) != ".xlsx")
+            {
+                Debug.LogWarning($"Selected file is not an Excel file: {assetPath}");
+                continue;
+            }
+            Type SOType = typeof(DialogueList_SO);
+            Type dataType = typeof(DialogueData);
+            ReadExcelAndCreateSO(assetPath, SOType, dataType);
+        }
+    }
+
+    private static void ReadExcelAndCreateSO(string assetPath, Type SOType, Type dataType)
     {
         // 通过原路径获取Resources文件夹下目标SO路径
         string category = Path.GetDirectoryName(assetPath).Split(Path.DirectorySeparatorChar).Last();
@@ -44,7 +70,8 @@ public class Excel2SO
         }
 
         // 创建序列化类
-        TaskList_SO data = ScriptableObject.CreateInstance<TaskList_SO>();
+        object SOData = Activator.CreateInstance(SOType);
+        SOData = ScriptableObject.CreateInstance(SOType);
         // 读取Excel文件，using会在读取完毕后自动释放资源
         FileInfo fileInfo = new FileInfo(assetPath);
         using (ExcelPackage excelPackage = new ExcelPackage(fileInfo))
@@ -55,15 +82,14 @@ public class Excel2SO
             for (int i = worksheet.Dimension.Start.Row + 2; i <= worksheet.Dimension.End.Row; i++)
             {
                 // 创建行对象
-                TaskData rowObject = new();
-                Type rowType = rowObject.GetType();
+                object rowObject = Activator.CreateInstance(dataType);
 
                 // 遍历列
                 for (int j = worksheet.Dimension.Start.Column; j <= worksheet.Dimension.End.Column; j++)
                 {
                     // 用反射的方式设置rowObject的属性值，可以适配这类Excel模板
                     // 第2行是属性名，用来对应rowObject的成员变量
-                    FieldInfo varible = rowType.GetField(worksheet.GetValue<string>(2, j));
+                    FieldInfo varible = dataType.GetField(worksheet.GetValue<string>(2, j));
                     // 第i行(i > 2)获取的第j列的值，用来设置rowObject的属性值
                     string cellValue = worksheet.GetValue<string>(i, j);
 
@@ -81,7 +107,23 @@ public class Excel2SO
                 }
 
                 // 添加rowObject到List
-                data.TaskList.Add(rowObject);
+                FieldInfo[] listFields = SOType.GetFields().Where(field => Regex.IsMatch(field.Name, "List$")).ToArray();
+                if (listFields.Length == 0)
+                {
+                    Debug.LogError($"No List field found in {SOType.Name}");
+                    return;
+                }
+                FieldInfo targetListField = listFields[0];
+                try
+                {
+                    object list = targetListField.GetValue(SOData);
+                    MethodInfo addMethod = list.GetType().GetMethod("Add");
+                    addMethod.Invoke(list, new object[] { rowObject });
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"动态调用Add方法失败: {ex.Message}");
+                }
             }
         }
 
@@ -92,7 +134,7 @@ public class Excel2SO
             AssetDatabase.Refresh();
         }
         // 保存序列化类为asset文件
-        AssetDatabase.CreateAsset(data, targetAssetPath);
+        AssetDatabase.CreateAsset((UnityEngine.Object)SOData, targetAssetPath);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
