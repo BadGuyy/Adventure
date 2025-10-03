@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2846641807729314381}
   - component: {fileID: 2327544888883801632}
   - component: {fileID: 6973310421784496690}
+  - component: {fileID: 3030137033485067614}
   m_Layer: 0
   m_Name: InteractinoSelectionPanel
   m_TagString: Untagged
@@ -34,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 200, y: 50}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 300, y: 50}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2327544888883801632
 MonoBehaviour:
@@ -56,12 +57,12 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 3
   m_Spacing: 7
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
-  m_ChildScaleWidth: 1
-  m_ChildScaleHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
 --- !u!114 &6973310421784496690
 MonoBehaviour:
@@ -75,3 +76,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d6607b71b1c5b4e8b1d6d8523cf612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3030137033485067614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656698400015221684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e620c01640b9bb44965094b3b47d427, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Selectables: []
+  _navigateAction: {fileID: -8784545083839296357, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _selectedAnimationScale: 1.2
+  _selectedAnimationDuration: 0.2
+  _animationExcusions: []
+  _soundEvent:
+    m_PersistentCalls:
+      m_Calls: []

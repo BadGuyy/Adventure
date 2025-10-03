@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Prefab
   m_GUID: 4d7173e904ba41f418fe5e138a6db959
   m_SerializeEntries:
+  - m_GUID: c2dcc1c57997c094f9863da6c7708b39
+    m_Address: Assets/Prefab/UI/Panel/InteractinoSelectionPanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fdb0d02d1035ae646b45c8daaa9c5984
     m_Address: Assets/Prefab/UI/Button/ChooseButton.prefab
     m_ReadOnly: 0

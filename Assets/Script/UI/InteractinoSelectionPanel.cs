@@ -1,25 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InteractinoSelectionPanel : BasePanel
 {
-    private DialogueDistanceComparer _dialogueDistanceComparer;
+    MenuEventSystemHandler _menuEventSystemHandler;
+    private DialogueDistanceComparer _dialogueDistanceComparer = new();
 
-    private List<(GameObject, float)> _selectionButtons;
+    private List<(GameObject, float)> _selectionButtons = new();
     private GameObject _interactinoSelectionButtonPrefab;
 
     void Awake()
     {
-        _dialogueDistanceComparer = new();
-        _selectionButtons = new();
+        _menuEventSystemHandler = GetComponent<MenuEventSystemHandler>();
         _interactinoSelectionButtonPrefab = Addressables.LoadAssetAsync<GameObject>("Assets/Prefab/UI/Button/ChooseButton.prefab").WaitForCompletion();
     }
 
     public void AddButton(float distance, string NPCName)
     {
         GameObject button = Instantiate(_interactinoSelectionButtonPrefab, transform);
+        _menuEventSystemHandler.AddSelectable(button.GetComponent<Selectable>());
         _selectionButtons.Add((button, distance));
         _selectionButtons.Sort(_dialogueDistanceComparer);
         button.name = NPCName;
@@ -33,9 +35,11 @@ public class InteractinoSelectionPanel : BasePanel
         {
             if (_selectionButtons[i].Item1 == button)
             {
+                _menuEventSystemHandler.RemoveSelectable(button.GetComponent<Selectable>());
                 _selectionButtons.RemoveAt(i);
                 _selectionButtons.Sort(_dialogueDistanceComparer);
                 button.transform.SetParent(null, false);
+                Destroy(button);
                 break;
             }
         }
@@ -45,7 +49,6 @@ public class InteractinoSelectionPanel : BasePanel
             return;
         }
         PanelLayoutRefresh();
-        Destroy(button);
     }
 
     private void PanelLayoutRefresh()
