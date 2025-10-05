@@ -5,8 +5,9 @@ using UnityEngine.AddressableAssets;
 
 public class UIPanelName
 {
-    public const string InteractinoSelectionPanel = "InteractinoSelectionPanel";
+    public const string NPCDialogueSelectionPanel = "NPCDialogueSelectionPanel";
     public const string DialoguePanel = "DialoguePanel";
+    public const string DialogueSelectionPanel = "DialogueSelectionPanel";
 }
 
 public class UIManager : MonoBehaviour
@@ -25,7 +26,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public Dictionary<string, BasePanel> OpenedPanelDict;
     private Transform UIRoot;
-    private HashSet<string> _dynamicCanvasDict;
+    private Dictionary<string, string> _panel2CanvasDict;
 
     private void Awake()
     {
@@ -35,13 +36,15 @@ public class UIManager : MonoBehaviour
         UIRoot = GameObject.Find("/UI").transform;
         PanelPathDict = new()
         {
-            { UIPanelName.InteractinoSelectionPanel, "Assets/Prefab/UI/Panel/InteractinoSelectionPanel.prefab" },
-            { UIPanelName.DialoguePanel, "Assets/Prefab/UI/Panel/DialoguePanel.prefab" }
+            { UIPanelName.NPCDialogueSelectionPanel, "Assets/Prefab/UI/Panel/NPCDialogueSelectionPanel.prefab" },
+            { UIPanelName.DialoguePanel, "Assets/Prefab/UI/Panel/DialoguePanel.prefab" },
+            { UIPanelName.DialogueSelectionPanel, "Assets/Prefab/UI/Panel/DialogueSelectionPanel.prefab" }
         };
-        _dynamicCanvasDict = new()
+        _panel2CanvasDict = new()
         {
-            UIPanelName.InteractinoSelectionPanel,
-            UIPanelName.DialoguePanel
+            { UIPanelName.NPCDialogueSelectionPanel, "NPCDialogueSelectionCanvas" },
+            { UIPanelName.DialoguePanel, "DialogueCanvas" },
+            { UIPanelName.DialogueSelectionPanel, "DialogueCanvas" }
         };
     }
 
@@ -62,22 +65,14 @@ public class UIManager : MonoBehaviour
             return null;
         }
 
-        Transform _rootCanvas;
-        // 在指定的Canvas下打开Panel
-        if (_dynamicCanvasDict.Contains(panelName))
-        {
-            Transform canvasTransform = UIRoot.Find(panelName.Replace("Panel", "Canvas"));
-            _rootCanvas = canvasTransform;
-        }
-        else
-        {
-            Transform canvasTransform = UIRoot.Find("Canvas");
-            _rootCanvas = canvasTransform;
-        }
 
         // 使用缓存的预制件
         if (!LoadedPanelDict.TryGetValue(panelName, out GameObject panelPrefab))
         {
+            // 在指定的Canvas下打开Panel
+            Transform _rootCanvas;
+            _rootCanvas = UIRoot.Find(_panel2CanvasDict[panelName]);
+
             panelPrefab = Addressables.LoadAssetAsync<GameObject>(panelPrefabPath).WaitForCompletion();
             GameObject panelObj = Instantiate(panelPrefab, _rootCanvas);
             panelObj.name = panelPrefab.name;
@@ -87,6 +82,7 @@ public class UIManager : MonoBehaviour
         basePanel = LoadedPanelDict[panelName].GetComponent<BasePanel>();
         basePanel.OpenPanel();
         return basePanel;
+
     }
 
     public bool ClosePanel(string panelName)
@@ -104,12 +100,12 @@ public class UIManager : MonoBehaviour
     public void UpdateInteractinoSelectionPanel(float distance, bool isAddButton, string NPCName)
     {
         // 检查面板是否是UnActive状态
-        if (!OpenedPanelDict.ContainsKey(UIPanelName.InteractinoSelectionPanel) && isAddButton)
+        if (!OpenedPanelDict.ContainsKey(UIPanelName.NPCDialogueSelectionPanel) && isAddButton)
         {
-            OpenPanel(UIPanelName.InteractinoSelectionPanel);
+            OpenPanel(UIPanelName.NPCDialogueSelectionPanel);
         }
 
-        InteractinoSelectionPanel panel = OpenedPanelDict[UIPanelName.InteractinoSelectionPanel] as InteractinoSelectionPanel;
+        NPCDialogueSelectionPanel panel = OpenedPanelDict[UIPanelName.NPCDialogueSelectionPanel] as NPCDialogueSelectionPanel;
         if (isAddButton)
         {
             panel.AddButton(distance, NPCName);

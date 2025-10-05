@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6973310421784496690}
   - component: {fileID: 3030137033485067614}
   m_Layer: 0
-  m_Name: InteractinoSelectionPanel
+  m_Name: NPCDialogueSelectionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

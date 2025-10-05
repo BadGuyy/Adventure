@@ -1,55 +1,64 @@
+using System;
 using UnityEngine;
-using DG.Tweening;
-using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance;
+    DialoguePanel _dialoguePanel;
+    private DialogueSelectionPanel _dialogueSelectionPanel;
 
-    private GameObject _dialogueCanvas;
-    private Text _dialogueNPCName;
-    private Text _dialogueContent;
-    private DialogueList_SO _dialogueData;
-    private DialogueData _currentDialogue;
+    public static event Action<bool> OnDialogueStart;
+    public static event Action<bool> OnDialogueEnd;
 
     private void Awake()
     {
         Instance = this;
     }
 
-    public void StartDialogue(GameObject npc)
+    public void StartDialogue(GameObject npcDialogueInteractionButton)
     {
-        if (_dialogueCanvas == null)
+        // 开始对话，需要隐藏NPC对话交互按钮选择面板，停止玩家的移动和摄像机的旋转
+        OnDialogueStart?.Invoke(false);
+        if (_dialoguePanel == null)
         {
-            Init();
+            _dialoguePanel = UIManager.Instance.OpenPanel(UIPanelName.DialoguePanel) as DialoguePanel;
         }
-
-        _dialogueCanvas.SetActive(true);
-        _dialogueNPCName.text = npc.name;
-        _dialogueData = Resources.Load<DialogueList_SO>($"Dialogue/{_dialogueNPCName.text}");
-        Instance._currentDialogue = Instance._dialogueData.DialogueList[0];
-        float _duration = _currentDialogue.Content.Length / 10;
-        _dialogueContent.DOText(_currentDialogue.Content, _duration);
+        _dialoguePanel.StartDialogue(npcDialogueInteractionButton);
     }
 
-    private void Init()
+    public void Next(DialogueData dialogueData = null)
     {
-        _dialogueCanvas = GameObject.Find("DialogueCanvas");
-        DontDestroyOnLoad(_dialogueCanvas);
-        Transform area = _dialogueCanvas.transform.Find("Area");
-        _dialogueNPCName = area.Find("NPCName").GetComponent<Text>();
-        _dialogueContent = area.Find("Content").Find("Dialogue").GetComponent<Text>();
+        _dialoguePanel.Next(dialogueData);
     }
 
-    public void Next()
+    public void ShowDialogueSelectionPanel(DialogueList_SO dialogueData, DialogueData currentDialogue)
     {
-        _currentDialogue = _dialogueData.DialogueList[_currentDialogue.Next];
+        if (_dialogueSelectionPanel == null)
+        {
+            _dialogueSelectionPanel = UIManager.Instance.OpenPanel(UIPanelName.DialogueSelectionPanel) as DialogueSelectionPanel;
+        }
+        _dialoguePanel.SetDialogueAreaClickable(false);
+        _dialogueSelectionPanel.ShowDialogueSelection(dialogueData, currentDialogue);
+    }
+
+    public void CloseDialogueSelectionPanel(DialogueData currentDialogue)
+    {
+        _dialoguePanel.StartDialogue(currentDialogue);
+        UIManager.Instance.ClosePanel(UIPanelName.DialogueSelectionPanel);
+        _dialoguePanel.SetDialogueAreaClickable(true);
+    }
+
+    public void CloseDialoguePanel()
+    {
+        UIManager.Instance.ClosePanel(UIPanelName.DialoguePanel);
+        // 关闭对话，显示NPC对话交互按钮选择面板，恢复玩家的移动和摄像机的旋转
+        OnDialogueEnd?.Invoke(true);
     }
 
 #if UNITY_EDITOR
     private void Oestroy()
     {
-        Instance = null;        
+        Instance = null;
     }
 #endif
 }

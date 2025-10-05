@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -7,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class MenuEventSystemHandler : MonoBehaviour
+public class NPCDialogueSelectionPanelEventSystemHandler : MonoBehaviour
 {
     [Header("References")]
     public List<Selectable> Selectables = new();

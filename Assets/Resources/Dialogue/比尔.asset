@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edba5a003bafe5a4cba5e77367ef866f, type: 3}
+  m_Name: "\u6BD4\u5C14"
+  m_EditorClassIdentifier: 
+  DialogueList:
+  - DialogueID: 0
+    NPCName: "\u6BD4\u5C14"
+    IsOption: 0
+    OptionEndIndex: -1
+    Content: "\u52C7\u58EB\uFF0C\u4F60\u7EC8\u4E8E\u6765\u4E86"
+    Next: 1
+  - DialogueID: 1
+    NPCName: "\u6BD4\u5C14"
+    IsOption: 0
+    OptionEndIndex: -1
+    Content: "\u6751\u53E3\u805A\u96C6\u4E86\u5F88\u591A\u9B54\u7269\uFF0C\u4F60\u80FD\u5E2E\u6211\u4EEC\u6253\u5012\u4ED6\u4EEC\u5417"
+    Next: 2
+  - DialogueID: 2
+    NPCName: "\u6BD4\u5C14"
+    IsOption: 1
+    OptionEndIndex: 3
+    Content: "\u597D\u7684\uFF0C\u6211\u73B0\u5728\u5C31\u53BB"
+    Next: 4
+  - DialogueID: 3
+    NPCName: "\u6BD4\u5C14"
+    IsOption: 1
+    OptionEndIndex: 3
+    Content: "\u62B1\u6B49\uFF0C\u73B0\u5728\u4E0D\u884C"
+    Next: 5
+  - DialogueID: 4
+    NPCName: "\u6BD4\u5C14"
+    IsOption: 0
+    OptionEndIndex: -1
+    Content: "\u592A\u611F\u8C22\u4F60\u4E86\u52C7\u58EB"
+    Next: -1
+  - DialogueID: 5
+    NPCName: "\u6BD4\u5C14"
+    IsOption: 0
+    OptionEndIndex: -1
+    Content: "\u597D\u5427\uFF0C\u7B49\u4F60\u6709\u7A7A\u518D\u8BF4\u5427"
+    Next: -1

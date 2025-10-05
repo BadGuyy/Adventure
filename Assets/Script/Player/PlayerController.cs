@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Move Settings")]
-    [SerializeField] private float _moveSpeed = 3f;
+    [SerializeField] private float _maxMoveSpeed = 3f;
     private float _currentSpeed = 0f;
     private float _targetSpeed = 0f;
     private float _currentDampingVelocity = 0f;
@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField][Range(0f, 1f)] private float _gravityScale = 1f;
     private bool _isJumping = false;
     private float _verticalVelocity = 0f;
+    private float _fallTime = 0f;
+    [SerializeField] private float _fallThresholsTime = 0.2f;
 
     [Header("Look Camera")]
     [SerializeField] private CinemachineCamera _playerFollowCinemachineCamera;
@@ -33,6 +35,8 @@ public class PlayerController : MonoBehaviour
     {
         _playerAnimator = GetComponent<Animator>();
         _playerCharacterController = GetComponent<CharacterController>();
+        DialogueManager.OnDialogueStart += ControlPlayerMovementAndCameraFollow;
+        DialogueManager.OnDialogueEnd += ControlPlayerMovementAndCameraFollow;
     }
 
     void Update()
@@ -50,11 +54,19 @@ public class PlayerController : MonoBehaviour
         if (!_playerCharacterController.isGrounded)
         {
             _verticalVelocity += Physics.gravity.y * _gravityScale * Time.deltaTime;
-            if(_verticalVelocity < 0f) _playerAnimator.SetBool("isFalling", true);
+            if (_verticalVelocity < 0f)
+            {
+                _fallTime += Time.deltaTime;
+                if (_fallTime > _fallThresholsTime)
+                {
+                    _playerAnimator.SetBool("isFalling", true);
+                }
+            }
         }
         else
         {
             _playerAnimator.SetBool("isFalling", false);
+            _fallTime = 0f;
         }
         _verticalVelocity = Mathf.Clamp(_verticalVelocity, -10f, 10f);
     }
@@ -84,7 +96,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // 计算角色相机朝向的移动方向
-        Vector3 movement = _moveDirection * _currentSpeed * _moveSpeed * Time.deltaTime;
+        Vector3 movement = _moveDirection * _currentSpeed * _maxMoveSpeed * Time.deltaTime;
         // 模拟重力
         movement.y += _verticalVelocity * Time.deltaTime;
         // 应用移动
@@ -121,12 +133,26 @@ public class PlayerController : MonoBehaviour
 
     void OnJump(InputValue value)
     {
-        if(_isJumping) return;
+        if (_isJumping) return;
         if (value.isPressed && _playerCharacterController.isGrounded)
         {
             _verticalVelocity = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * _jumpHeight);
             _isJumping = true;
             _playerAnimator.SetTrigger("Jump");
         }
+    }
+
+    private void ControlPlayerMovementAndCameraFollow(bool active)
+    {
+        // 停止角色移动
+        GetComponent<PlayerInput>().enabled = active;
+        // 停止角色相机跟随
+        _playerFollowCinemachineCamera.gameObject.SetActive(active);
+    }
+
+    void OnDestroy()
+    {
+        DialogueManager.OnDialogueStart -= ControlPlayerMovementAndCameraFollow;
+        DialogueManager.OnDialogueEnd -= ControlPlayerMovementAndCameraFollow;
     }
 }

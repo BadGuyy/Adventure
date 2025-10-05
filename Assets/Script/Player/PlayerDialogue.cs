@@ -1,18 +1,7 @@
-using System;
 using UnityEngine;
 
 public class PlayerDialogue : MonoBehaviour
 {
-    private GameObject _currentNPC;
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.F))
-        {
-            DialogueManager.Instance.StartDialogue(_currentNPC);
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("NPC"))

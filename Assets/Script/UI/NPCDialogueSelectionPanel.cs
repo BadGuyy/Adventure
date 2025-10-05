@@ -1,12 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InteractinoSelectionPanel : BasePanel
+public class NPCDialogueSelectionPanel : BasePanel
 {
-    MenuEventSystemHandler _menuEventSystemHandler;
+    NPCDialogueSelectionPanelEventSystemHandler _NPCDialogueSelectionPanelEventSystemHandler;
     private DialogueDistanceComparer _dialogueDistanceComparer = new();
 
     private List<(GameObject, float)> _selectionButtons = new();
@@ -14,14 +14,27 @@ public class InteractinoSelectionPanel : BasePanel
 
     void Awake()
     {
-        _menuEventSystemHandler = GetComponent<MenuEventSystemHandler>();
-        _interactinoSelectionButtonPrefab = Addressables.LoadAssetAsync<GameObject>("Assets/Prefab/UI/Button/ChooseButton.prefab").WaitForCompletion();
+        _NPCDialogueSelectionPanelEventSystemHandler = GetComponent<NPCDialogueSelectionPanelEventSystemHandler>();
+        _interactinoSelectionButtonPrefab = Addressables.LoadAssetAsync<GameObject>("Assets/Prefab/UI/Button/NPCDialogueChooseButton.prefab").WaitForCompletion();
+    }
+
+    void Start()
+    {
+        DialogueManager.OnDialogueStart += SetActive;
+        DialogueManager.OnDialogueEnd += SetActive;
     }
 
     public void AddButton(float distance, string NPCName)
     {
         GameObject button = Instantiate(_interactinoSelectionButtonPrefab, transform);
-        _menuEventSystemHandler.AddSelectable(button.GetComponent<Selectable>());
+        // 添加按钮点击触发对话事件
+        button.GetComponent<Button>().onClick.AddListener
+        (
+            () => DialogueManager.Instance.StartDialogue(button)
+        );
+        // 为按钮添加选中相关功能
+        _NPCDialogueSelectionPanelEventSystemHandler.AddSelectable(button.GetComponent<Selectable>());
+
         _selectionButtons.Add((button, distance));
         _selectionButtons.Sort(_dialogueDistanceComparer);
         button.name = NPCName;
@@ -35,17 +48,19 @@ public class InteractinoSelectionPanel : BasePanel
         {
             if (_selectionButtons[i].Item1 == button)
             {
-                _menuEventSystemHandler.RemoveSelectable(button.GetComponent<Selectable>());
+                _NPCDialogueSelectionPanelEventSystemHandler.RemoveSelectable(button.GetComponent<Selectable>());
                 _selectionButtons.RemoveAt(i);
                 _selectionButtons.Sort(_dialogueDistanceComparer);
                 button.transform.SetParent(null, false);
+                // 在摧毁按钮之前移除按钮点击触发对话事件
+                button.GetComponent<Button>().onClick.RemoveAllListeners();
                 Destroy(button);
                 break;
             }
         }
         if (_selectionButtons.Count == 0)
         {
-            UIManager.Instance.ClosePanel(UIPanelName.InteractinoSelectionPanel);
+            UIManager.Instance.ClosePanel(UIPanelName.NPCDialogueSelectionPanel);
             return;
         }
         PanelLayoutRefresh();
@@ -59,6 +74,17 @@ public class InteractinoSelectionPanel : BasePanel
         }
 
         LayoutRebuilder.MarkLayoutForRebuild(GetComponent<RectTransform>());
+    }
+
+    private void SetActive(bool active)
+    {
+        gameObject.SetActive(active);
+    }
+
+    private void OnDestroy()
+    {
+        DialogueManager.OnDialogueStart -= SetActive;
+        DialogueManager.OnDialogueEnd -= SetActive;
     }
 }
 

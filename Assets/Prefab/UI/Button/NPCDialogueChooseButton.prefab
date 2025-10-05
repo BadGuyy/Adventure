@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 8549235441970342125}
   - component: {fileID: 4223917230751065930}
   m_Layer: 5
-  m_Name: ChooseButton
+  m_Name: NPCDialogueChooseButton
   m_TagString: Untagged
   m_Icon: {fileID: 2800000, guid: 94fc7c772ff3e3e4e82e2104009827fe, type: 3}
   m_NavMeshLayer: 0

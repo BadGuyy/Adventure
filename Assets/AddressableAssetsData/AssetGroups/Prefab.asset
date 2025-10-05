@@ -15,13 +15,28 @@ MonoBehaviour:
   m_GroupName: Prefab
   m_GUID: 4d7173e904ba41f418fe5e138a6db959
   m_SerializeEntries:
+  - m_GUID: 37fdc7369fe0fde4d896eb09cd507019
+    m_Address: Assets/Prefab/UI/Panel/DialoguePanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 74142ec5a5373fc449604e1f822dc439
+    m_Address: Assets/Prefab/UI/Panel/DialogueSelectionPanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c2dcc1c57997c094f9863da6c7708b39
-    m_Address: Assets/Prefab/UI/Panel/InteractinoSelectionPanel.prefab
+    m_Address: Assets/Prefab/UI/Panel/NPCDialogueSelectionPanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e76313125b868fd4ebb48d64fd08cc08
+    m_Address: Assets/Prefab/UI/Button/DialogueSelectionButton.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fdb0d02d1035ae646b45c8daaa9c5984
-    m_Address: Assets/Prefab/UI/Button/ChooseButton.prefab
+    m_Address: Assets/Prefab/UI/Button/NPCDialogueChooseButton.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
