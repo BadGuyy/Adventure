@@ -46,6 +46,13 @@ public class UIManager : MonoBehaviour
             { UIPanelName.DialoguePanel, "DialogueCanvas" },
             { UIPanelName.DialogueSelectionPanel, "DialogueCanvas" }
         };
+        SwitchCursorVisibility(false);
+    }
+
+    public void SwitchCursorVisibility(bool isVisible)
+    {
+        Cursor.lockState = isVisible ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = isVisible;
     }
 
     public BasePanel OpenPanel(string panelName)

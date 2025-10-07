@@ -8,6 +8,7 @@ public class PlayerDialogue : MonoBehaviour
         {
             float distance = Vector3.Distance(other.transform.position, transform.position);
             UIManager.Instance.UpdateInteractinoSelectionPanel(distance, true, other.gameObject.name);
+            UIManager.Instance.SwitchCursorVisibility(true);
         }
     }
 
@@ -17,6 +18,7 @@ public class PlayerDialogue : MonoBehaviour
         {
             float distance = Vector3.Distance(other.transform.position, transform.position);
             UIManager.Instance.UpdateInteractinoSelectionPanel(distance, false, other.gameObject.name);
+            UIManager.Instance.SwitchCursorVisibility(false);
         }
     }
 }

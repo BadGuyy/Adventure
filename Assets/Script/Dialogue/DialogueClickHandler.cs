@@ -15,4 +15,12 @@ public class DialogueClickHandler : MonoBehaviour, IPointerClickHandler
             return;
         }
     }
+
+    void Update()
+    {
+        if (isClickable && Input.GetKeyDown(KeyCode.F))
+        {
+            DialogueManager.Instance.Next();
+        }
+    }
 }
