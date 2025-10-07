@@ -5,23 +5,17 @@ using UnityEngine.UI;
 
 public class DialoguePanel : BasePanel
 {
-    public Text DialogueNPCName;
-    public Text DialogueContent;
-    public GameObject DialogueCompleteHint;
+    public Text _dialogueNPCName;
+    public Text _dialogueContent;
+    public GameObject _dialogueCompleteHint;
     [SerializeField] private DialogueClickHandler _dialogueClickHandler;
     private DialogueList_SO _dialogueData;
     private DialogueData _currentDialogue;
     private Tween _dialogueTextTween;
     [SerializeField] private int _dialogueTextPerSecond = 10;
 
-    void Awake()
-    {
-        // 把对话的文字动画的生命周期绑定到对话面板的生命周期
-        // _dialogueTextTween.SetLink(_dialogueContent.gameObject);
-    }
-
     // 开始对话
-    public void StartDialogue(GameObject npc)
+    public void StartDialogue(string npcName)
     {
         // 检查对话面板是否已经打开
         if (!UIManager.Instance.OpenedPanelDict.ContainsKey(UIPanelName.DialoguePanel))
@@ -29,10 +23,20 @@ public class DialoguePanel : BasePanel
             UIManager.Instance.OpenPanel(UIPanelName.DialoguePanel);
         }
 
-        DialogueNPCName.text = npc.name;
-        _dialogueData = Resources.Load<DialogueList_SO>($"Dialogue/{DialogueNPCName.text}");
+        _dialogueNPCName.text = npcName;
+        _dialogueData = Resources.Load<DialogueList_SO>($"Dialogue/{_dialogueNPCName.text}");
 
-        _currentDialogue = _dialogueData.DialogueList[0];
+        int currentPhase = SaveManager.Instance.LoadNPCDialoguePhase(npcName);
+        int dialogueIndex = 0;
+        for (int i = 0; i < _dialogueData.DialogueList.Count; i++)
+        {
+            if (_dialogueData.DialogueList[i].Phase == currentPhase)
+            {
+                dialogueIndex = i;
+                break;
+            }
+        }
+        _currentDialogue = _dialogueData.DialogueList[dialogueIndex];
         ShowDialogue(_currentDialogue);
     }
 
@@ -46,8 +50,8 @@ public class DialoguePanel : BasePanel
     private void ShowDialogue(DialogueData dialogueData)
     {
         float _duration = (float)dialogueData.Content.Length / _dialogueTextPerSecond;
-        DialogueContent.text = "";
-        _dialogueTextTween = DialogueContent.DOText(dialogueData.Content, _duration)
+        _dialogueContent.text = "";
+        _dialogueTextTween = _dialogueContent.DOText(dialogueData.Content, _duration)
             .OnComplete(ShowDialogueCompleteHint);
     }
 
@@ -57,7 +61,7 @@ public class DialoguePanel : BasePanel
         {
             _currentDialogue = dialogueData;
         }
-        // 检查文字是否已经显示完毕
+        // 检查文字是否已经显示完毕，没有的话直接全部显示
         if (_dialogueTextTween != null && _dialogueTextTween.IsActive())
         {
             _dialogueTextTween.Complete(true);
@@ -67,6 +71,11 @@ public class DialoguePanel : BasePanel
             // -1表示对话结束，关闭对话面板
             if (_currentDialogue.Next == -1)
             {
+                // 在存档和当前Session里设置玩家对话的进度
+                if (_currentDialogue.NextPhase != -1)
+                {
+                    SaveManager.Instance.SaveNPCDialogueData(_currentDialogue.NPCName, _currentDialogue.NextPhase);
+                }
                 DialogueManager.Instance.CloseDialoguePanel();
                 return;
             }
@@ -86,12 +95,12 @@ public class DialoguePanel : BasePanel
 
     private void ShowDialogueCompleteHint()
     {
-        DialogueCompleteHint.SetActive(true);
+        _dialogueCompleteHint.SetActive(true);
     }
 
     private void HideDialogueCompleteHint()
     {
-        DialogueCompleteHint.SetActive(false);
+        _dialogueCompleteHint.SetActive(false);
     }
 
     public void SetDialogueAreaClickable(bool isClickable)

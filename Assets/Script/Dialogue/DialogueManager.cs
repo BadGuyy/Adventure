@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance;
-    DialoguePanel _dialoguePanel;
+    private DialoguePanel _dialoguePanel;
     private DialogueSelectionPanel _dialogueSelectionPanel;
+    private Dictionary<string, int> _NPCDialoguePhase;
 
     public static event Action<bool> OnDialogueStart;
     public static event Action<bool> OnDialogueEnd;
@@ -13,9 +15,10 @@ public class DialogueManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        // _NPCDialoguePhase = SaveManager.Instance.LoadNPCDialogueData();
     }
 
-    public void StartDialogue(GameObject npcDialogueInteractionButton)
+    public void StartDialogue(string npcName)
     {
         // 开始对话，需要隐藏NPC对话交互按钮选择面板，停止玩家的移动和摄像机的旋转
         OnDialogueStart?.Invoke(false);
@@ -23,7 +26,7 @@ public class DialogueManager : MonoBehaviour
         {
             _dialoguePanel = UIManager.Instance.OpenPanel(UIPanelName.DialoguePanel) as DialoguePanel;
         }
-        _dialoguePanel.StartDialogue(npcDialogueInteractionButton);
+        _dialoguePanel.StartDialogue(npcName);
     }
 
     public void Next(DialogueData dialogueData = null)
@@ -56,7 +59,7 @@ public class DialogueManager : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    private void Oestroy()
+    private void OnDestroy()
     {
         Instance = null;
     }

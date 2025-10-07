@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edba5a003bafe5a4cba5e77367ef866f, type: 3}
+  m_Name: "\u6D3E\u8499"
+  m_EditorClassIdentifier: 
+  DialogueList:
+  - Phase: 0
+    DialogueID: 0
+    NPCName: "\u6D3E\u8499"
+    IsOption: 0
+    OptionEndIndex: -1
+    Content: "\u52C7\u58EB\uFF0C\u4F60\u7EC8\u4E8E\u6765\u4E86"
+    Next: 1
+    NextPhase: -1
+  - Phase: 0
+    DialogueID: 1
+    NPCName: "\u6D3E\u8499"
+    IsOption: 0
+    OptionEndIndex: -1
+    Content: "\u6211\u662F\u8FD9\u4E2A\u6751\u5B50\u7684\u70BC\u836F\u5E08"
+    Next: 2
+    NextPhase: -1
+  - Phase: 0
+    DialogueID: 2
+    NPCName: "\u6D3E\u8499"
+    IsOption: 0
+    OptionEndIndex: -1
+    Content: "\u4F60\u53EF\u4EE5\u627E\u6211\u8D2D\u4E70\u836F\u6C34"
+    Next: -1
+    NextPhase: -1

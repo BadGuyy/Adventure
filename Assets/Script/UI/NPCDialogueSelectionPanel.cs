@@ -30,7 +30,7 @@ public class NPCDialogueSelectionPanel : BasePanel
         // 添加按钮点击触发对话事件
         button.GetComponent<Button>().onClick.AddListener
         (
-            () => DialogueManager.Instance.StartDialogue(button)
+            () => DialogueManager.Instance.StartDialogue(button.name)
         );
         // 为按钮添加选中相关功能
         _NPCDialogueSelectionPanelEventSystemHandler.AddSelectable(button.GetComponent<Selectable>());

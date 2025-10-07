@@ -35,8 +35,12 @@ public class PlayerController : MonoBehaviour
     {
         _playerAnimator = GetComponent<Animator>();
         _playerCharacterController = GetComponent<CharacterController>();
+    }
+    void Start()
+    {
         DialogueManager.OnDialogueStart += ControlPlayerMovementAndCameraFollow;
         DialogueManager.OnDialogueEnd += ControlPlayerMovementAndCameraFollow;
+        SaveManager.Instance.LoadPlayerTransform(transform);
     }
 
     void Update()
@@ -145,7 +149,8 @@ public class PlayerController : MonoBehaviour
     private void ControlPlayerMovementAndCameraFollow(bool active)
     {
         // 停止角色移动
-        GetComponent<PlayerInput>().enabled = active;
+        var a = GetComponent<PlayerInput>();
+        a.enabled = active;
         // 停止角色相机跟随
         _playerFollowCinemachineCamera.gameObject.SetActive(active);
     }
@@ -154,5 +159,10 @@ public class PlayerController : MonoBehaviour
     {
         DialogueManager.OnDialogueStart -= ControlPlayerMovementAndCameraFollow;
         DialogueManager.OnDialogueEnd -= ControlPlayerMovementAndCameraFollow;
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveManager.Instance.SavePlayerTransform(transform.position, transform.rotation);
     }
 }

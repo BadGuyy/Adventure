@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DevTool
 {
-    [MenuItem("Tools/Sync Scene Camera to Object")]
+    [MenuItem("Tools/Sync Scene Camera to Object _F4")]
     static void SyncSceneCameraToObject()
     {
         GameObject target = Selection.activeGameObject;

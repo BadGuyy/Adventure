@@ -443,9 +443,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ea2b55525a2fd42889a58678209357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DialogueNPCName: {fileID: 2935905996427791057}
-  DialogueContent: {fileID: 2507271949861631982}
-  DialogueCompleteHint: {fileID: 3379671605156192868}
+  _dialogueNPCName: {fileID: 2935905996427791057}
+  _dialogueContent: {fileID: 2507271949861631982}
+  _dialogueCompleteHint: {fileID: 3379671605156192868}
   _dialogueClickHandler: {fileID: 2792338722619840020}
   _dialogueTextPerSecond: 10
 --- !u!1 &7810996791371975709
