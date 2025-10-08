@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,5 +28,32 @@ public class DevTool
     static void ForceReload()
     {
         EditorUtility.RequestScriptReload(); // 强制请求脚本重载
+    }
+
+    [MenuItem("Tools/ReadSaveFile")]
+    static void ReadSaveFile()
+    {
+        string savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adventure");
+        string saveFilePath = Path.Combine(savePath, "save");
+        if (File.Exists(saveFilePath))
+        {
+            string content = File.ReadAllText(saveFilePath);
+            content = EncryptData(content);
+            Debug.Log(content);
+        }
+    }
+    
+    private static string EncryptData(string data)
+    {
+        char[]encryptionKey = { 'H', 'e', 'l', 'l', 'o' };
+        char[] dataChars = data.ToCharArray();
+        for (int i = 0; i < data.Length; i++)
+        {
+            char dataChar = data[i];
+            char keyChar = encryptionKey[i % encryptionKey.Length];
+            char encryptedChar = (char)(dataChar ^ keyChar);
+            dataChars[i] = encryptedChar;
+        }
+        return new string(dataChars);
     }
 }

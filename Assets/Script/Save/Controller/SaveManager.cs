@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class SaveManager : MonoBehaviour
     private char[] _encryptionKey = { 'H', 'e', 'l', 'l', 'o' };
     private string _savePath;
     private string _saveFilePath;
+    private GameObject _player;
 
     void Awake()
     {
@@ -37,6 +39,21 @@ public class SaveManager : MonoBehaviour
             // 读取存档数据
             LoadSaveData();
         }
+        // 订阅场景卸载事件
+        PauseManager.OnReturnMainMenu += SaveFullData;
+        _player = GameObject.Find("/Asuka");
+    }
+
+    void OnDestroy()
+    {
+        Instance = null;
+        PauseManager.OnReturnMainMenu -= SaveFullData;
+    }
+
+    private void SaveFullData()
+    {
+        SavePlayerTransform(_player.transform.position, _player.transform.rotation);
+        SaveData();
     }
 
     private void LoadSaveData()
@@ -108,14 +125,13 @@ public class SaveManager : MonoBehaviour
         _saveData._playerRotationY = rotation.y;
         _saveData._playerRotationZ = rotation.z;
         _saveData._playerRotationW = rotation.w;
-        SaveData();
     }
 
-    public Transform LoadPlayerTransform(Transform playerTransform)
+    public void LoadPlayerTransform(Transform playerTransform)
     {
         playerTransform.position = new Vector3(_saveData._playerPositionX, _saveData._playerPositionY, _saveData._playerPositionZ);
         playerTransform.rotation = new Quaternion(_saveData._playerRotationX, _saveData._playerRotationY, _saveData._playerRotationZ, _saveData._playerRotationW);
-        return playerTransform;
+        return;
     }
 
     private string EncryptData(string data)
@@ -135,11 +151,4 @@ public class SaveManager : MonoBehaviour
     {
         return EncryptData(data);
     }
-
-#if UNITY_EDITOR
-    void OnDestroy()
-    {
-        Instance = null;
-    }
-#endif
 }

@@ -3,12 +3,12 @@ using System;
 [Serializable]
 public class DialogueData
 {
-    internal int Phase;
-    internal int DialogueID;
-    internal string NPCName;
-    internal bool IsOption;
-    internal int OptionEndIndex;
-    internal string Content;
-    internal int Next;
-    internal int NextPhase;
+    public int Phase;
+    public int DialogueID;
+    public string NPCName;
+    public bool IsOption;
+    public int OptionEndIndex;
+    public string Content;
+    public int Next;
+    public int NextPhase;
 }

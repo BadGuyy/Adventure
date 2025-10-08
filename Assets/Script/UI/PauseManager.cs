@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
@@ -7,6 +8,7 @@ public class PauseManager : MonoBehaviour
 {
     private GameObject _pasuePanel;
     private bool _isPaused;
+    public static event Action OnReturnMainMenu;
 
     void Awake()
     {
@@ -61,15 +63,8 @@ public class PauseManager : MonoBehaviour
 
     private async void BackToMainMenu()
     {
-        Scene currentScene = SceneManager.GetActiveScene();
+        OnReturnMainMenu?.Invoke();
+        Time.timeScale = 1;
         await SceneManager.LoadSceneAsync("MainMenu");
-    }
-
-    private void OnApplicationQuit()
-    {
-        Transform pauseArea = _pasuePanel.transform.GetChild(0);
-        pauseArea.GetChild(0).GetComponent<Button>().onClick.RemoveAllListeners();
-        pauseArea.GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
-        pauseArea.GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
     }
 }

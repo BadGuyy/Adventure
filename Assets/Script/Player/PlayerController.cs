@@ -155,14 +155,9 @@ public class PlayerMoveController : MonoBehaviour
         _playerFollowCinemachineCamera.gameObject.SetActive(active);
     }
 
-    void OnDestroy()
+    void OnDisable()
     {
         DialogueManager.OnDialogueStart -= ControlPlayerMovementAndCameraFollow;
         DialogueManager.OnDialogueEnd -= ControlPlayerMovementAndCameraFollow;
-    }
-
-    void OnApplicationQuit()
-    {
-        SaveManager.Instance.SavePlayerTransform(transform.position, transform.rotation);
     }
 }
