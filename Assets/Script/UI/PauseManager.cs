@@ -9,6 +9,8 @@ public class PauseManager : MonoBehaviour
     private GameObject _pasuePanel;
     private bool _isPaused;
     public static event Action OnReturnMainMenu;
+    public static event Action OnPasuMenuOpen;
+    public static event Action OnPasuMenuClose;
 
     void Awake()
     {
@@ -40,6 +42,7 @@ public class PauseManager : MonoBehaviour
 
     private void Pause()
     {
+        OnPasuMenuOpen?.Invoke();
         Time.timeScale = 0;
         _pasuePanel.SetActive(true);
         _isPaused = true;
@@ -49,6 +52,7 @@ public class PauseManager : MonoBehaviour
 
     private void Resume()
     {
+        OnPasuMenuClose?.Invoke();
         Time.timeScale = 1;
         _pasuePanel.SetActive(false);
         _isPaused = false;

@@ -25,6 +25,7 @@ public class PlayerMoveController : MonoBehaviour
     private float _verticalVelocity = 0f;
     private float _fallTime = 0f;
     [SerializeField] private float _fallThresholsTime = 0.2f;
+    private bool _isMovable = true;
 
     [Header("Look Camera")]
     [SerializeField] private CinemachineCamera _playerFollowCinemachineCamera;
@@ -40,14 +41,30 @@ public class PlayerMoveController : MonoBehaviour
     {
         DialogueManager.OnDialogueStart += ControlPlayerMovementAndCameraFollow;
         DialogueManager.OnDialogueEnd += ControlPlayerMovementAndCameraFollow;
+        PauseManager.OnPasuMenuOpen += DisableMovement;
+        PauseManager.OnPasuMenuClose += EnableMovement;
         SaveManager.Instance.LoadPlayerTransform(transform);
     }
 
     void Update()
     {
-        JumpAndGravity();
-        Move();
+        if (_isMovable)
+        {
+            JumpAndGravity();
+            Move();
+        }
     }
+    
+    void OnDisable()
+    {
+        DialogueManager.OnDialogueStart -= ControlPlayerMovementAndCameraFollow;
+        DialogueManager.OnDialogueEnd -= ControlPlayerMovementAndCameraFollow;
+        PauseManager.OnPasuMenuOpen -= DisableMovement;
+        PauseManager.OnPasuMenuClose -= EnableMovement;
+    }
+
+    private void EnableMovement() => _isMovable = true;
+    private void DisableMovement() => _isMovable = false;
 
     private void JumpAndGravity()
     {
@@ -153,11 +170,5 @@ public class PlayerMoveController : MonoBehaviour
         a.enabled = active;
         // 停止角色相机跟随
         _playerFollowCinemachineCamera.gameObject.SetActive(active);
-    }
-
-    void OnDisable()
-    {
-        DialogueManager.OnDialogueStart -= ControlPlayerMovementAndCameraFollow;
-        DialogueManager.OnDialogueEnd -= ControlPlayerMovementAndCameraFollow;
     }
 }
