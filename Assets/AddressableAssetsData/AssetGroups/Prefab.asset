@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bbb6e79727f5ede488f2b06b59dd90cb
+    m_Address: Assets/Prefab/UI/Panel/PausePanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c2dcc1c57997c094f9863da6c7708b39
     m_Address: Assets/Prefab/UI/Panel/NPCDialogueSelectionPanel.prefab
     m_ReadOnly: 0
