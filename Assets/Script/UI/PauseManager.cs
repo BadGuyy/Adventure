@@ -63,7 +63,6 @@ public class PauseManager : MonoBehaviour
     {
         Scene currentScene = SceneManager.GetActiveScene();
         await SceneManager.LoadSceneAsync("MainMenu");
-        await SceneManager.UnloadSceneAsync(currentScene);
     }
 
     private void OnApplicationQuit()

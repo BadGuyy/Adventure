@@ -2901,7 +2901,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1641950268}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &172246766
 PrefabInstance:
@@ -8880,7 +8880,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 671110394}
-  - component: {fileID: 671110395}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -8907,18 +8906,6 @@ Transform:
   - {fileID: 141725085}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &671110395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 671110393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49679b29ba2021e4987096365b841eaf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &682639317
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20306,6 +20293,7 @@ Transform:
   - {fileID: 1651825183}
   - {fileID: 976759760}
   - {fileID: 1054122710}
+  - {fileID: 166914031}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1647045889
@@ -26732,4 +26720,3 @@ SceneRoots:
   - {fileID: 1726286941}
   - {fileID: 671110394}
   - {fileID: 1641950268}
-  - {fileID: 166914031}
