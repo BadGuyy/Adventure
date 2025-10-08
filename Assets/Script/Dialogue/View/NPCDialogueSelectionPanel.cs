@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using Dialogue;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
@@ -60,7 +60,7 @@ public class NPCDialogueSelectionPanel : BasePanel
         }
         if (_selectionButtons.Count == 0)
         {
-            UIManager.Instance.ClosePanel(UIPanelName.NPCDialogueSelectionPanel);
+            DialogueUIManager.Instance.ClosePanel(DialogueUIPanelName.NPCDialogueSelectionPanel);
             return;
         }
         PanelLayoutRefresh();
@@ -85,14 +85,5 @@ public class NPCDialogueSelectionPanel : BasePanel
     {
         DialogueManager.OnDialogueStart -= SetActive;
         DialogueManager.OnDialogueEnd -= SetActive;
-    }
-}
-
-public class DialogueDistanceComparer : IComparer<(GameObject, float)>
-{
-    public int Compare((GameObject, float) a, (GameObject, float) b)
-    {
-        int result = a.Item2.CompareTo(b.Item2);
-        return result;
     }
 }

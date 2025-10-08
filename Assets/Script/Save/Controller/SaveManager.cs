@@ -118,13 +118,6 @@ public class SaveManager : MonoBehaviour
         return playerTransform;
     }
 
-    public Dictionary<string, int> LoadNPCDialogueData()
-    {
-        Dictionary<string, int> npcDialogueData = new();
-
-        return npcDialogueData;
-    }
-
     private string EncryptData(string data)
     {
         char[] dataChars = data.ToCharArray();

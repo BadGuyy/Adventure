@@ -3,7 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerMoveController : MonoBehaviour
 {
     [Header("Move Settings")]
     [SerializeField] private float _maxMoveSpeed = 3f;

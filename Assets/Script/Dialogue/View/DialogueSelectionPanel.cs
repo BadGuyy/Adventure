@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Dialogue;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
@@ -23,9 +24,9 @@ public class DialogueSelectionPanel : BasePanel
         dialogueList.Add(currentDialogue);
 
         // 打开对话选项面板
-        if (!UIManager.Instance.OpenedPanelDict.ContainsKey(UIPanelName.DialogueSelectionPanel))
+        if (!DialogueUIManager.Instance.OpenedPanelDict.ContainsKey(DialogueUIPanelName.DialogueSelectionPanel))
         {
-            UIManager.Instance.OpenPanel(UIPanelName.DialogueSelectionPanel);
+            DialogueUIManager.Instance.OpenPanel(DialogueUIPanelName.DialogueSelectionPanel);
         }
         // 为选项面板添加选项按钮和按钮的监听器
         for (int i = 0; i < dialogueList.Count; i++)

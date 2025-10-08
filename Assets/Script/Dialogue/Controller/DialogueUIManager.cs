@@ -1,18 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Dialogue;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class UIPanelName
+public class DialogueUIManager : MonoBehaviour
 {
-    public const string NPCDialogueSelectionPanel = "NPCDialogueSelectionPanel";
-    public const string DialoguePanel = "DialoguePanel";
-    public const string DialogueSelectionPanel = "DialogueSelectionPanel";
-}
-
-public class UIManager : MonoBehaviour
-{
-    public static UIManager Instance;
+    public static DialogueUIManager Instance;
     /// <summary>
     /// 记录所有面板的读取路径
     /// </summary>
@@ -36,15 +30,15 @@ public class UIManager : MonoBehaviour
         UIRoot = GameObject.Find("/UI").transform;
         PanelPathDict = new()
         {
-            { UIPanelName.NPCDialogueSelectionPanel, "Assets/Prefab/UI/Panel/NPCDialogueSelectionPanel.prefab" },
-            { UIPanelName.DialoguePanel, "Assets/Prefab/UI/Panel/DialoguePanel.prefab" },
-            { UIPanelName.DialogueSelectionPanel, "Assets/Prefab/UI/Panel/DialogueSelectionPanel.prefab" }
+            { DialogueUIPanelName.NPCDialogueSelectionPanel, "Assets/Prefab/UI/Panel/NPCDialogueSelectionPanel.prefab" },
+            { DialogueUIPanelName.DialoguePanel, "Assets/Prefab/UI/Panel/DialoguePanel.prefab" },
+            { DialogueUIPanelName.DialogueSelectionPanel, "Assets/Prefab/UI/Panel/DialogueSelectionPanel.prefab" }
         };
         _panel2CanvasDict = new()
         {
-            { UIPanelName.NPCDialogueSelectionPanel, "NPCDialogueSelectionCanvas" },
-            { UIPanelName.DialoguePanel, "DialogueCanvas" },
-            { UIPanelName.DialogueSelectionPanel, "DialogueCanvas" }
+            { DialogueUIPanelName.NPCDialogueSelectionPanel, "NPCDialogueSelectionCanvas" },
+            { DialogueUIPanelName.DialoguePanel, "DialogueCanvas" },
+            { DialogueUIPanelName.DialogueSelectionPanel, "DialogueCanvas" }
         };
         SwitchCursorVisibility(false);
     }
@@ -107,12 +101,12 @@ public class UIManager : MonoBehaviour
     public void UpdateInteractinoSelectionPanel(float distance, bool isAddButton, string NPCName)
     {
         // 检查面板是否是UnActive状态
-        if (!OpenedPanelDict.ContainsKey(UIPanelName.NPCDialogueSelectionPanel) && isAddButton)
+        if (!OpenedPanelDict.ContainsKey(DialogueUIPanelName.NPCDialogueSelectionPanel) && isAddButton)
         {
-            OpenPanel(UIPanelName.NPCDialogueSelectionPanel);
+            OpenPanel(DialogueUIPanelName.NPCDialogueSelectionPanel);
         }
 
-        NPCDialogueSelectionPanel panel = OpenedPanelDict[UIPanelName.NPCDialogueSelectionPanel] as NPCDialogueSelectionPanel;
+        NPCDialogueSelectionPanel panel = OpenedPanelDict[DialogueUIPanelName.NPCDialogueSelectionPanel] as NPCDialogueSelectionPanel;
         if (isAddButton)
         {
             panel.AddButton(distance, NPCName);
