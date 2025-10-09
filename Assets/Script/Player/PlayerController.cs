@@ -1,7 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using XLua;
 
 public class PlayerMoveController : MonoBehaviour
 {
@@ -26,6 +30,8 @@ public class PlayerMoveController : MonoBehaviour
     private float _fallTime = 0f;
     [SerializeField] private float _fallThresholsTime = 0.2f;
     private bool _isMovable = true;
+    LuaEnv _luaEnv;
+    private AsyncOperationHandle<TextAsset> _luaLoadHandle;
 
     [Header("Look Camera")]
     [SerializeField] private CinemachineCamera _playerFollowCinemachineCamera;
@@ -39,28 +45,55 @@ public class PlayerMoveController : MonoBehaviour
     }
     void Start()
     {
+        // 加载Lua脚本
+        LoadLuaCode();
+
         DialogueManager.OnDialogueStart += ControlPlayerMovementAndCameraFollow;
         DialogueManager.OnDialogueEnd += ControlPlayerMovementAndCameraFollow;
         PauseManager.OnPasuMenuOpen += DisableMovement;
         PauseManager.OnPasuMenuClose += EnableMovement;
+        // 加载存档数据
         SaveManager.Instance.LoadPlayerTransform(transform);
+
+        _normalizedForwardDirection = _playerFollowCinemachineCamera.transform.forward;
+        _normalizedRightDirection = _playerFollowCinemachineCamera.transform.right;
+    }
+
+    private async void LoadLuaCode()
+    {
+        _luaLoadHandle = Addressables.LoadAssetAsync<TextAsset>("Assets/Script/Player/Lua/PlayerController.lua.txt");
+        await _luaLoadHandle.Task;
+        string luaCode = _luaLoadHandle.Result.text;
+        _luaEnv = new();
+        _luaEnv.DoString(luaCode);
+        _maxMoveSpeed = _luaEnv.Global.Get<float>("MaxMoveSpeed");
     }
 
     void Update()
     {
+        if (_luaEnv != null)
+        {
+            _luaEnv.Tick();
+        }
         if (_isMovable)
         {
             JumpAndGravity();
             Move();
         }
     }
-    
+
     void OnDisable()
     {
         DialogueManager.OnDialogueStart -= ControlPlayerMovementAndCameraFollow;
         DialogueManager.OnDialogueEnd -= ControlPlayerMovementAndCameraFollow;
         PauseManager.OnPasuMenuOpen -= DisableMovement;
         PauseManager.OnPasuMenuClose -= EnableMovement;
+    }
+
+    void OnDestroy()
+    {
+        Addressables.Release(_luaLoadHandle);
+        _luaEnv.Dispose();
     }
 
     private void EnableMovement() => _isMovable = true;
