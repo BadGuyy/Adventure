@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 public class DialoguePanelController : MonoBehaviour
@@ -24,7 +25,7 @@ public class DialoguePanelController : MonoBehaviour
         }
 
         _dialogueNPCName.text = npcName;
-        _dialogueData = Resources.Load<DialogueList_SO>($"Dialogue/{_dialogueNPCName.text}");
+        _dialogueData = Addressables.LoadAssetAsync<DialogueList_SO>($"Assets/Content/Dialogue/{npcName}.asset").WaitForCompletion();
 
         int currentPhase = SaveManager.Instance.LoadNPCDialoguePhase(npcName);
         int dialogueIndex = 0;

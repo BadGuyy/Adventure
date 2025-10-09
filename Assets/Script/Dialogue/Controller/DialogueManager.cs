@@ -8,7 +8,6 @@ public class DialogueManager : MonoBehaviour
     private DialoguePanelController _dialoguePanelController;
     private DialoguePanelView _dialoguePanelView;
     private DialogueSelectionPanel _dialogueSelectionPanel;
-    private Dictionary<string, int> _NPCDialoguePhase;
 
     public static event Action<bool> OnDialogueStart;
     public static event Action<bool> OnDialogueEnd;
