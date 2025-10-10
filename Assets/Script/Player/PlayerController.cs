@@ -53,7 +53,9 @@ public class PlayerMoveController : MonoBehaviour
         PauseManager.OnPasuMenuOpen += DisableMovement;
         PauseManager.OnPasuMenuClose += EnableMovement;
         // 加载存档数据
+        _playerCharacterController.enabled = false;
         SaveManager.Instance.LoadPlayerTransform(transform);
+        _playerCharacterController.enabled = true;
 
         _normalizedForwardDirection = _playerFollowCinemachineCamera.transform.forward;
         _normalizedRightDirection = _playerFollowCinemachineCamera.transform.right;

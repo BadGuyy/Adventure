@@ -14,7 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Dialogue
   m_GUID: 316b8898e2b4f1d449b31f0fe951a15b
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 461e43cae39980d43b3d3ec1f874af1f
+    m_Address: "Assets/Content/Dialogue/\u6D3E\u8499.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 58550013ac3e3824fb729c19b8d6d408
+    m_Address: "Assets/Content/Dialogue/\u6BD4\u5C14.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 6f39138c7d5d51a4c81523d8a15cdb4f, type: 2}
   m_SchemaSet:

@@ -15,10 +15,10 @@ MonoBehaviour:
   m_DefaultGroup: 4d7173e904ba41f418fe5e138a6db959
   m_currentHash:
     serializedVersion: 2
-    Hash: 98381cf5f6fe597f4fd2b7ae1a620da1
+    Hash: 30fd57fca948ca467c1ce9b58fd5d948
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
-  m_CatalogRequestsTimeout: 0
+  m_BuildRemoteCatalog: 1
+  m_CatalogRequestsTimeout: 300
   m_DisableCatalogUpdateOnStart: 0
   m_InternalIdNamingMode: 0
   m_InternalBundleIdMode: 1
@@ -50,9 +50,9 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: 740eb2bb3e7bc194abe281fce3a1f6b5
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: 18f54d9b363a4e14a965b00c30285f8f
   m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
@@ -72,7 +72,7 @@ MonoBehaviour:
       m_ProfileName: Default
       m_Values:
       - m_Id: 18f54d9b363a4e14a965b00c30285f8f
-        m_Value: <undefined>
+        m_Value: http://127.0.0.1:3000
       - m_Id: 740eb2bb3e7bc194abe281fce3a1f6b5
         m_Value: 'ServerData/[BuildTarget]'
       - m_Id: 99a3d5599758aab4e84f0275fa49cf5e

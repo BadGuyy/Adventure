@@ -39,15 +39,19 @@ public class SaveManager : MonoBehaviour
             // 读取存档数据
             LoadSaveData();
         }
-        // 订阅场景卸载事件
+        
         PauseManager.OnReturnMainMenu += SaveFullData;
         _player = GameObject.Find("/Asuka");
+    }
+
+    void OnDisable()
+    {
+        PauseManager.OnReturnMainMenu -= SaveFullData;
     }
 
     void OnDestroy()
     {
         Instance = null;
-        PauseManager.OnReturnMainMenu -= SaveFullData;
     }
 
     private void SaveFullData()
@@ -131,7 +135,6 @@ public class SaveManager : MonoBehaviour
     {
         playerTransform.position = new Vector3(_saveData._playerPositionX, _saveData._playerPositionY, _saveData._playerPositionZ);
         playerTransform.rotation = new Quaternion(_saveData._playerRotationX, _saveData._playerRotationY, _saveData._playerRotationZ, _saveData._playerRotationW);
-        return;
     }
 
     private string EncryptData(string data)
